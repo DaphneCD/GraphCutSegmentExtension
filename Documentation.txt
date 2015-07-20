@@ -1,0 +1,33 @@
+<noinclude>{{documentation/versioncheck}}</noinclude>
+<!-- ---------------------------- -->
+{{documentation/{{documentation/version}}/module-header}}
+<!-- ---------------------------- -->
+<!-- ---------------------------- -->
+{{documentation/{{documentation/version}}/module-section|Introduction and Acknowledgements}}
+Authors: Danfeng Chen (Western University), Liqun Liu (Western University)<br>
+Contact: Danfeng Chen, <email>dchen285@uwo.ca</email><br>
+Website: <br>
+License: [http://www.slicer.org/pages/LicenseText Slicer license]
+
+<!-- ---------------------------- -->
+{{documentation/{{documentation/version}}/extension-section|Extension Description}}
+{|
+[[Image:GraphCutSegment.png]]
+|
+GraphCutSegment is an extension of 3D Slicer, a free, open source software for tumor segmentation using graph cut and star shape algorithm. 
+|
+|}
+
+<!-- ---------------------------- -->
+{{documentation/{{documentation/version}}/extension-section|Similar Extensions}}
+
+<!-- ---------------------------- -->
+{{documentation/{{documentation/version}}/extension-section|References}}
+
+<!-- ---------------------------- -->
+{{documentation/{{documentation/version}}/extension-section|Information for Developers}}
+{{documentation/{{documentation/version}}/extension-developerinfo}}
+
+<!-- ---------------------------- -->
+{{documentation/{{documentation/version}}/extension-footer}}
+<!-- ---------------------------- -->
