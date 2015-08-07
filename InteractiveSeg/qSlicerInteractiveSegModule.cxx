@@ -23,6 +23,7 @@
 
 #include <vtkSlicerVolumesLogic.h>
 #include <vtkSlicerAnnotationModuleLogic.h>
+#include <vtkSlicerCropVolumeLogic.h>
 
 // InteractiveSeg includes
 #include "qSlicerInteractiveSegModule.h"
@@ -30,6 +31,11 @@
 #include "qSlicerAbstractCoreModule.h"
 #include "qSlicerCoreApplication.h"
 #include "qSlicerModuleManager.h"
+
+//#include "AbstractThreeDViewInstantiator.h"
+#include "InteractiveSegInstantiator.h"
+#include "vtkMRMLSliceViewDisplayableManagerFactory.h"
+#include "vtkMRMLThreeDViewDisplayableManagerFactory.h"
 
 //-----------------------------------------------------------------------------
 Q_EXPORT_PLUGIN2(qSlicerInteractiveSegModule, qSlicerInteractiveSegModule);
@@ -108,6 +114,14 @@ void qSlicerInteractiveSegModule::setup()
 {
   this->Superclass::setup();
 
+  // If the displayable manager is for 3D views:
+//  vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(
+ //    "vtkMRMLInteractiveSegDisplayableManager");
+
+   // If the displayable manager is for 2D views:
+  vtkMRMLSliceViewDisplayableManagerFactory::GetInstance()->
+	 RegisterDisplayableManager("vtkMRMLInteractiveSegDisplayableManager");
+
   vtkSlicerInteractiveSegLogic* moduleLogic =
      vtkSlicerInteractiveSegLogic::SafeDownCast(this->logic());
    
@@ -120,15 +134,16 @@ void qSlicerInteractiveSegModule::setup()
      moduleLogic->SetVolumesLogic(volumesLogic);
      }
 
-/*   qSlicerAbstractCoreModule* annotationModule =
-	   qSlicerCoreApplication::application()->moduleManager()->module("Annotations");
-   if (annotationModule)
+   qSlicerAbstractCoreModule* cropVolumeModule =
+	   qSlicerCoreApplication::application()->moduleManager()->module("CropVolume");
+   if (cropVolumeModule)
      {
-     vtkSlicerAnnotationModuleLogic* annotationLogic = 
-       vtkSlicerAnnotationModuleLogic::SafeDownCast(annotationModule->logic());
-     moduleLogic->SetAnnotationLogic(annotationLogic);
-     }*/
+     vtkSlicerCropVolumeLogic* cropVolumeLogic = 
+       vtkSlicerCropVolumeLogic::SafeDownCast(cropVolumeModule->logic());
+     moduleLogic->SetCropVolumeLogic(cropVolumeLogic);
+     }
 
+  
 }
 
 //-----------------------------------------------------------------------------

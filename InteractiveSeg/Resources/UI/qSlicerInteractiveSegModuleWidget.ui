@@ -140,16 +140,16 @@
         <item row="4" column="1">
          <widget class="qMRMLNodeComboBox" name="outputVolumeMRMLNodeComboBox" native="true">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="nodeTypes" stdset="0">
            <stringlist>
-            <string>vtkMRMLScalarVolumeNode</string>
+            <string>vtkMRMLLabelMapVolumeNode</string>
            </stringlist>
           </property>
           <property name="showChildNodeTypes" stdset="0">
            <bool>false</bool>
-          </property> 
+          </property>
           <property name="addEnabled" stdset="0">
            <bool>false</bool>
           </property>
@@ -158,10 +158,17 @@
           </property>
           <property name="renameEnabled" stdset="0">
            <bool>false</bool>
-          </property>		  
+          </property>
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cropPushButton">
+        <property name="text">
+         <string>Crop</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="applyPushButton">
@@ -176,7 +183,7 @@
         </property>
        </widget>
       </item>
-	   <item>
+      <item>
        <widget class="QPushButton" name="reapplyPushButton">
         <property name="enabled">
          <bool>false</bool>

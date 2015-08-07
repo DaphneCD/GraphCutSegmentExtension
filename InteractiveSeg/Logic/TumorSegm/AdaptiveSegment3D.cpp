@@ -387,21 +387,24 @@ void AdaptiveSegment3D::segment()
        m_pGraph->addDataCost(fgcost,FOREGROUND);
        m_pGraph->addDataCost(bkcost,BACKGROUND);
     }
-//	cout<<"Done add dataterm"<<endl;
+	cout<<"Done add dataterm  1"<<endl;
     m_pGraph->addDataCost(extraDataCost.id,extraDataCost.fgcost,extraDataCost.bkcost);
-//	cout<<"Done add extra dataterm"<<endl;
+	cout<<"Done add extra dataterm  2"<<endl;
     if(cfg.smoothterm)
     {
        m_pGraph->addSmoothCost(smoothCostR.first,smoothCostR.second,ROW);
        m_pGraph->addSmoothCost(smoothCostC.first,smoothCostC.second,COLUMN);
     }
-//	cout<<"Done add smoothterm"<<endl;
+	cout<<"Done add smoothterm  3"<<endl;
+	cout<<extraSmoothCost.id1.size()<<";"<<extraSmoothCost.id2.size()
+		<<extraSmoothCost.cap.size()<<extraSmoothCost.rev_cap.size()<<endl;
+//	return;
     m_pGraph->addSmoothCost(extraSmoothCost.id1,extraSmoothCost.id2,extraSmoothCost.cap,extraSmoothCost.rev_cap);
-//	cout<<"Done add extra smoothterm"<<endl;
+	cout<<"Done add extra smoothterm  4"<<endl;
  //cout<<"star3d size "<<extraSmoothCost.id1.size()<<endl;
 //	cout<<" Begin maxflow "<<endl;
     double flow = m_pGraph->maxflow();
-//    cout<<" Got flow "<<flow<<endl;
+    cout<<" Got flow  5"<<flow<<endl;
     labeling = m_pGraph->get_labeling();
 
     num_iteration++;

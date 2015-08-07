@@ -27,7 +27,10 @@ set(${KIT}_TARGET_LIBRARIES
   vtkSlicerAnnotationsModuleLogic
   TumorSegm
   vtkSlicerVolumesModuleLogic
+  vtkSlicerCropVolumeModuleLogic
   )
+
+
 
 #-----------------------------------------------------------------------------
 SlicerMacroBuildModuleLogic(

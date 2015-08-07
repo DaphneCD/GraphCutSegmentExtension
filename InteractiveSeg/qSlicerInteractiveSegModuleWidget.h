@@ -25,6 +25,7 @@
 #include "vtkMRMLMarkupsFiducialNode.h"
 #include "vtkMRMLScalarVolumeNode.h"
 #include "vtkMRMLModelNode.h"
+#include "vtkMRMLCropVolumeParametersNode.h"
 
 class qSlicerInteractiveSegModuleWidgetPrivate;
 class vtkMRMLNode;
@@ -52,6 +53,9 @@ public:
   /// Reset the GUI elements: clear out the table
   void clearGUI();
   void updateApplyButtonState();
+  bool isCropped;
+  bool isChecked;
+  vtkMRMLCropVolumeParametersNode *parametersNode;
 
 public slots:
   //CHEN
@@ -66,6 +70,7 @@ public slots:
   void updateResetUpdateButtonState();
 
   /// Display property button slots
+  void onCropPushButtonClicked();
   void onApplyPushButtonClicked();
   void onReapplyPushButtonClicked();
   void onResetPushButtonClicked();

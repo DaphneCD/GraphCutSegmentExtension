@@ -18,7 +18,7 @@ endif()
 #-----------------------------------------------------------------------------
 add_subdirectory(Logic)
 add_subdirectory(Widgets)
-#add_subdirectory(TumorSegm)
+add_subdirectory(MRMLDM)
 
 #-----------------------------------------------------------------------------
 set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
@@ -29,10 +29,14 @@ set(MODULE_INCLUDE_DIRECTORIES
   ${CMAKE_CURRENT_BINARY_DIR}/Logic
   ${CMAKE_CURRENT_SOURCE_DIR}/Widgets
   ${CMAKE_CURRENT_BINARY_DIR}/Widgets
+  ${CMAKE_CURRENT_SOURCE_DIR}/MRMLDM
+  ${CMAKE_CURRENT_BINARY_DIR}/MRMLDM
   ${vtkSlicerVolumesModuleLogic_SOURCE_DIR}
   ${vtkSlicerVolumesModuleLogic_BINARY_DIR}
   ${vtkSlicerAnnotationModuleLogic_SOURCE_DIR}
   ${vtkSlicerAnnotationModuleLogic_BINARY_DIR}
+  ${vtkSlicerCropVolumeModuleLogic_SOURCE_DIR}
+  ${vtkSlicerCropVolumeModuleLogic_BINARY_DIR}
   )
 
 set(MODULE_SRCS
@@ -54,13 +58,33 @@ set(MODULE_UI_SRCS
 set(MODULE_TARGET_LIBRARIES
   vtkSlicer${MODULE_NAME}ModuleLogic
   qSlicer${MODULE_NAME}ModuleWidgets
+  vtkSlicer${MODULE_NAME}ModuleMRMLDisplayableManager
   vtkSlicerVolumesModuleLogic
   vtkSlicerAnnotationsModuleLogic
+  vtkSlicerCropVolumeModuleLogic
   )
 
 set(MODULE_RESOURCES
   Resources/qSlicer${MODULE_NAME}Module.qrc
   )
+
+#----------------------------------------------------------------------------
+#include(${VTK_CMAKE_DIR}/vtkMakeInstantiator.cmake)
+#set(displayable_manager_SRCS
+#  vtkMRMLInteractiveSegDisplayableManager.cxx
+# )
+#set(VTK_USE_INSTANTIATOR_NEW 1)
+#VTK_MAKE_INSTANTIATOR3("${MODULE_NAME}Instantiator"
+#  displayable_manager_instantiator_SRCS
+#  "${displayable_manager_SRCS}"
+#  "${${KIT}_EXPORT_DIRECTIVE}"
+#  ${CMAKE_CURRENT_BINARY_DIR}
+#  "${KIT}Export.h"
+#  )
+#set(${KIT}_SRCS
+#  ${displayable_manager_instantiator_SRCS}
+#  ${displayable_manager_SRCS}
+#  )
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildQtModule(

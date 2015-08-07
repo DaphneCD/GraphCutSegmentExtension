@@ -26,17 +26,25 @@
 #include "qMRMLSceneModel.h"
 #include "qMRMLUtils.h"
 #include "qSlicerApplication.h"
+#include "qSlicerAbstractCoreModule.h"
+#include "vtkSlicerApplicationLogic.h"
 
 // MRML includes
 #include "vtkMRMLScene.h"
 #include "vtkMRMLSelectionNode.h"
 #include "vtkMRMLSliceLogic.h"
 #include "vtkMRMLSliceNode.h"
+#include "vtkMRMLLabelMapVolumeNode.h"
 
 // Markups includes
 #include "vtkMRMLMarkupsFiducialNode.h"
 #include "vtkMRMLMarkupsNode.h"
 #include "vtkSlicerMarkupsLogic.h"
+
+#include "vtkMRMLCropVolumeParametersNode.h"
+
+#include "qSlicerCoreApplication.h"
+#include "qSlicerModuleManager.h"
 
 // InteractiveSegLogic includes
 #include "vtkSlicerInteractiveSegLogic.h"
@@ -95,6 +103,7 @@ void qSlicerInteractiveSegModuleWidget::setup()
 {
   Q_D(qSlicerInteractiveSegModuleWidget);
   d->setupUi(this);
+ 
   this->Superclass::setup();
 
   // set up buttons connection
@@ -104,12 +113,16 @@ void qSlicerInteractiveSegModuleWidget::setup()
                    this, SLOT(onApplyPushButtonClicked()));
   connect(d->reapplyPushButton,  SIGNAL(clicked()),
                    this, SLOT(onReapplyPushButtonClicked()));
+  connect(d->cropPushButton,  SIGNAL(clicked()),
+                   this, SLOT(onCropPushButtonClicked()));
 
   // set up input&output&markups connection
   connect(d->inputVolumeMRMLNodeComboBox,  SIGNAL(currentNodeChanged(vtkMRMLNode*)),
                    this, SLOT(onInputVolumeMRMLNodeChanged()));
   connect(d->outputVolumeMRMLNodeComboBox,  SIGNAL(currentNodeChanged(vtkMRMLNode*)),
                    this, SLOT(onOutputVolumeMRMLNodeChanged()));
+  connect(d->outputVolumeMRMLNodeComboBox, SIGNAL(nodeAdded(vtkMRMLNode*)),
+                   this, SLOT(onOutputVolumeAdded(vtkMRMLNode*)));
   connect(d->markupsMRMLNodeComboBox,  SIGNAL(currentNodeChanged(vtkMRMLNode*)),
                    this, SLOT(onMarkupsMRMLNodeChanged()));
 }
@@ -142,6 +155,7 @@ void qSlicerInteractiveSegModuleWidget::enter()
   d->outputVolumeMRMLNodeComboBox->setEnabled(false);
 
   this->Superclass::enter();
+  this->isCropped=false;
 }
 
 void qSlicerInteractiveSegModuleWidget::updateApplyUpdateButtonState()
@@ -237,32 +251,76 @@ void qSlicerInteractiveSegModuleWidget:: onMarkupsMRMLNodeChanged()
     updateApplyUpdateButtonState();
 }
 
+void qSlicerInteractiveSegModuleWidget:: onCropPushButtonClicked()
+{
+	Q_D(qSlicerInteractiveSegModuleWidget);
+	vtkSlicerInteractiveSegLogic *logic = d->logic();
+
+	this->parametersNode = vtkMRMLCropVolumeParametersNode::New();
+	this->mrmlScene()->AddNode(parametersNode);
+
+	if(1==logic->checkMarkups(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),
+		                      vtkMRMLMarkupsFiducialNode::SafeDownCast(d->markupsMRMLNodeComboBox->currentNode())))
+	{
+		cout<<"logic->crop"<<endl;
+		this->isCropped=!logic->crop(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),parametersNode);
+		if (this->isCropped)
+		{		
+			d->inputVolumeMRMLNodeComboBox->setCurrentNodeID(parametersNode->GetOutputVolumeNodeID());
+			d->outputVolumeMRMLNodeComboBox->setCurrentNodeID(parametersNode->GetOutputVolumeNodeID());
+//			vtkSlicerApplicationLogic *appLogic = this->module()->appLogic();
+//			qSlicerAbstractCoreModule* cropVolumeModule =
+//	               qSlicerCoreApplication::application()->moduleManager()->module("CropVolume");
+			vtkSlicerApplicationLogic *appLogic = qSlicerCoreApplication::application()->moduleManager()->module("Editor")->appLogic();
+			vtkMRMLSelectionNode *selectionNode = appLogic->GetSelectionNode();
+			selectionNode->SetReferenceActiveVolumeID(parametersNode->GetOutputVolumeNodeID());
+			appLogic->PropagateVolumeSelection();
+			cout<<"After   CropVolumeLogic()->Apply"<<endl;
+		}
+	}
+	parametersNode->Delete();
+}
   
 void qSlicerInteractiveSegModuleWidget:: onApplyPushButtonClicked()
 {
     Q_D(qSlicerInteractiveSegModuleWidget);
     vtkSlicerInteractiveSegLogic *logic = d->logic();
 
-	if(1==logic->checkMarkups(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),
-		                      vtkMRMLMarkupsFiducialNode::SafeDownCast(d->markupsMRMLNodeComboBox->currentNode())))
-    {
-		char* labelNodeID= logic->apply(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),
-              d->star3CheckBox->isChecked(),
-              d->star2CheckBox->isChecked(),
-  //            vtkMRMLScalarVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()),
-			  this->mrmlScene());
-		if(labelNodeID!=NULL)
+	char* labelNodeID;
+	if(this->isCropped)
+	{
+		if(logic->GetROINode())
+			labelNodeID= logic->apply(vtkMRMLScalarVolumeNode::SafeDownCast(this->mrmlScene()->GetNodeByID(this->parametersNode->GetOutputVolumeNodeID())),
+			d->star3CheckBox->isChecked(),
+			d->star2CheckBox->isChecked(),
+			//            vtkMRMLScalarVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()),
+			this->mrmlScene());
+	}
+	else
+	{
+		cout<<"not cropped"<<endl;
+		if(1==logic->checkMarkups(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),
+			vtkMRMLMarkupsFiducialNode::SafeDownCast(d->markupsMRMLNodeComboBox->currentNode())))
 		{
-			  updateResetUpdateButtonState();
-			  updateReapplyUpdateButtonState();
-			  
-			  d->outputVolumeMRMLNodeComboBox->setCurrentNodeID(labelNodeID);
-			  d->outputVolumeMRMLNodeComboBox->setEnabled(true);
-			  d->applyPushButton->setEnabled(false);
+			
+			labelNodeID= logic->apply(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),
+				d->star3CheckBox->isChecked(),
+				d->star2CheckBox->isChecked(),
+				//            vtkMRMLScalarVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()),
+				this->mrmlScene());
 		}
-		else
-			return;
-    }
+	}
+	if(labelNodeID!=NULL)
+	{
+		updateResetUpdateButtonState();
+		updateReapplyUpdateButtonState();
+
+		d->outputVolumeMRMLNodeComboBox->setCurrentNodeID(labelNodeID);
+		d->outputVolumeMRMLNodeComboBox->setEnabled(true);
+		d->applyPushButton->setEnabled(false);
+	}
+	else
+		return;
 }
 
 void qSlicerInteractiveSegModuleWidget:: onReapplyPushButtonClicked()
@@ -270,7 +328,11 @@ void qSlicerInteractiveSegModuleWidget:: onReapplyPushButtonClicked()
 	Q_D(qSlicerInteractiveSegModuleWidget);
 	vtkSlicerInteractiveSegLogic *logic = d->logic();
 
-	logic->reapply(vtkMRMLScalarVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()));
+	char* labelNodeID = logic->reapply(vtkMRMLLabelMapVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()), 
+		                d->star3CheckBox->isChecked(),
+                        d->star2CheckBox->isChecked());
+	if(labelNodeID!=NULL)
+		d->outputVolumeMRMLNodeComboBox->setCurrentNodeID(labelNodeID);
 	d->resetPushButton->setEnabled(true);
 	d->applyPushButton->setEnabled(false);
 }

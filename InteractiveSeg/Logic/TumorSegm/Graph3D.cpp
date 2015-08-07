@@ -65,10 +65,13 @@ void Graph3D::addSmoothCost(const Data3D<double>& cap,const Data3D<double>& rev_
 void Graph3D::addSmoothCost(const vector<int>& id1, const vector<int>& id2,const vector<double>& cap,const vector<double>& rev_cap)
 {
     int num = id1.size();
+	cout<<"Begin addSmoothCost!"<<endl;
     for(int i=0; i<num; i++)
         {
+//			cout<<i<<endl;
             add_edge(id1[i], id2[i], cap[i], rev_cap[i]);
         }
+	cout<<"Done addSmoothCost!"<<endl;
 }
 
 //add sparse data cost
