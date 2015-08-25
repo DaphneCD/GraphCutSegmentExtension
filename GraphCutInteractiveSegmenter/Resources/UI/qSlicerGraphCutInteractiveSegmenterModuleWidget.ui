@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>qSlicerGraphCutInteractiveSegmenterModuleWidget</class>
+ <widget class="qSlicerWidget" name="qSlicerGraphCutInteractiveSegmenterModuleWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>525</width>
+    <height>355</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="ctkCollapsibleButton" name="CTKCollapsibleButton" native="true">
+     <property name="text" stdset="0">
+      <string>Parameters</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="inputVolumeLabel">
+          <property name="text">
+           <string>Input Volume: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="qMRMLNodeComboBox" name="inputVolumeMRMLNodeComboBox" native="true">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="nodeTypes" stdset="0">
+           <stringlist>
+            <string>vtkMRMLScalarVolumeNode</string>
+           </stringlist>
+          </property>
+          <property name="noneEnabled" stdset="0">
+           <bool>true</bool>
+          </property>
+          <property name="addEnabled" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="removeEnabled" stdset="0">
+           <bool>true</bool>
+          </property>
+          <property name="renameEnabled" stdset="0">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="markupsLabel">
+          <property name="text">
+           <string>Segment from Markups: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="qMRMLNodeComboBox" name="markupsMRMLNodeComboBox" native="true">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="nodeTypes" stdset="0">
+           <stringlist>
+            <string>vtkMRMLMarkupsFiducialNode</string>
+           </stringlist>
+          </property>
+          <property name="showChildNodeTypes" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="baseName" stdset="0">
+           <string>C</string>
+          </property>
+          <property name="noneEnabled" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="addEnabled" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="removeEnabled" stdset="0">
+           <bool>true</bool>
+          </property>
+          <property name="renameEnabled" stdset="0">
+           <bool>true</bool>
+          </property>
+          <property name="selectNodeUponCreation" stdset="0">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="star3Label">
+          <property name="text">
+           <string>3D Star Shape: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="star3CheckBox">
+          <property name="text">
+           <string>Using 3D Star Shape Constraint</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="star2Label">
+          <property name="text">
+           <string>2D Star Shape: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="star2CheckBox">
+          <property name="text">
+           <string>Using 2D Star Shape Constraint</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="outputVolumeLabel">
+          <property name="text">
+           <string>Output Volume: </string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="qMRMLNodeComboBox" name="outputVolumeMRMLNodeComboBox" native="true">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="nodeTypes" stdset="0">
+           <stringlist>
+            <string>vtkMRMLLabelMapVolumeNode</string>
+           </stringlist>
+          </property>
+          <property name="showChildNodeTypes" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="addEnabled" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="removeEnabled" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="renameEnabled" stdset="0">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="timeTextLabel">
+          <property name="text">
+           <string>Editing Time:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="timeLabel">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="margin">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QPushButton" name="cropPushButton">
+        <property name="text">
+         <string>Crop</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="applyPushButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Apply</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="reapplyPushButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Reapply</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="resetPushButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Reset</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qMRMLNodeComboBox</class>
+   <extends>QWidget</extends>
+   <header>qMRMLNodeComboBox.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>qSlicerWidget</class>
+   <extends>QWidget</extends>
+   <header>qSlicerWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ctkCollapsibleButton</class>
+   <extends>QWidget</extends>
+   <header>ctkCollapsibleButton.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>qSlicerGraphCutInteractiveSegmenterModuleWidget</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>inputVolumeMRMLNodeComboBox</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>441</x>
+     <y>315</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>390</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qSlicerGraphCutInteractiveSegmenterModuleWidget</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>markupsMRMLNodeComboBox</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>257</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>262</x>
+     <y>86</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>qSlicerGraphCutInteractiveSegmenterModuleWidget</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>outputVolumeMRMLNodeComboBox</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>195</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>202</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

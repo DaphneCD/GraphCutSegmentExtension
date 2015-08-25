@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8.9)
 #-----------------------------------------------------------------------------
 # Extension meta-information
 set(EXTENSION_HOMEPAGE "http://www.example.com/Slicer/Extensions/GraphCutSegment")
-set(EXTENSION_CATEGORY "Examples")
+set(EXTENSION_CATEGORY "Segmentation")
 set(EXTENSION_CONTRIBUTORS "Daphne Chen (Western University)")
 set(EXTENSION_DESCRIPTION "This is a segment extension using graph cut algorithm.")
 set(EXTENSION_ICONURL "http://www.example.com/Slicer/Extensions/GraphCutSegment.png")
@@ -18,7 +18,7 @@ include(${Slicer_USE_FILE})
 
 #-----------------------------------------------------------------------------
 # Extension modules
-add_subdirectory(InteractiveSeg)
+add_subdirectory(GraphCutInteractiveSegmenter)
 ## NEXT_MODULE
 
 #-----------------------------------------------------------------------------
