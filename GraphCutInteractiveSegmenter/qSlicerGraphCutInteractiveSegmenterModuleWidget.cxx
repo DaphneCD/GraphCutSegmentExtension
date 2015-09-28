@@ -51,6 +51,8 @@
 
 #include <iostream>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 //-----------------------------------------------------------------------------
 /// \ingroup Slicer_QtModules_ExtensionTemplate
@@ -257,7 +259,7 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onCropPushButtonClicked()
 	Q_D(qSlicerGraphCutInteractiveSegmenterModuleWidget);
 	vtkSlicerGraphCutInteractiveSegmenterLogic *logic = d->logic();
 
-	this->parametersNode = vtkMRMLCropVolumeParametersNode::New();
+	this->parametersNode = vtkSmartPointer<vtkMRMLCropVolumeParametersNode>::New();
 	this->mrmlScene()->AddNode(parametersNode);
 
 	if(1==logic->checkMarkups(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),
@@ -293,9 +295,9 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onApplyPushButtonClicked(
 		if(logic->GetROINode())
 			labelNodeID= logic->apply(vtkMRMLScalarVolumeNode::SafeDownCast(this->mrmlScene()->GetNodeByID(this->parametersNode->GetOutputVolumeNodeID())),
 			d->star3CheckBox->isChecked(),
-			d->star2CheckBox->isChecked(),
+			d->star2CheckBox->isChecked());
 			//            vtkMRMLScalarVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()),
-			this->mrmlScene());
+			//this->mrmlScene());
 	}
 	else
 	{
@@ -306,9 +308,9 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onApplyPushButtonClicked(
 			
 			labelNodeID= logic->apply(vtkMRMLScalarVolumeNode::SafeDownCast(d->inputVolumeMRMLNodeComboBox->currentNode()),
 				d->star3CheckBox->isChecked(),
-				d->star2CheckBox->isChecked(),
+				d->star2CheckBox->isChecked());
 				//            vtkMRMLScalarVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()),
-				this->mrmlScene());
+				//this->mrmlScene());
 		}
 	}
 	if(labelNodeID!=NULL)
@@ -348,8 +350,7 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onResetPushButtonClicked(
 	
 	Q_D(qSlicerGraphCutInteractiveSegmenterModuleWidget);
 	vtkSlicerGraphCutInteractiveSegmenterLogic *logic = d->logic();
-	logic->reset(vtkMRMLMarkupsFiducialNode::SafeDownCast(d->markupsMRMLNodeComboBox->currentNode()),
-			  this->mrmlScene(),1);
+	logic->reset(vtkMRMLMarkupsFiducialNode::SafeDownCast(d->markupsMRMLNodeComboBox->currentNode()),1);
 	d->resetPushButton->setEnabled(false);
 	d->applyPushButton->setEnabled(true);
 	d->reapplyPushButton->setEnabled(false);
@@ -366,8 +367,7 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onEndCloseEvent()
 {
 	Q_D(qSlicerGraphCutInteractiveSegmenterModuleWidget);
 	vtkSlicerGraphCutInteractiveSegmenterLogic *logic = d->logic();
-	logic->reset(vtkMRMLMarkupsFiducialNode::SafeDownCast(d->markupsMRMLNodeComboBox->currentNode()),
-			  this->mrmlScene(),0);
+	logic->reset(vtkMRMLMarkupsFiducialNode::SafeDownCast(d->markupsMRMLNodeComboBox->currentNode()),0);
 	d->resetPushButton->setEnabled(false);
 	d->applyPushButton->setEnabled(true);
 	d->reapplyPushButton->setEnabled(false);

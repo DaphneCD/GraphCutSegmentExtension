@@ -102,6 +102,9 @@ vtkSlicerGraphCutInteractiveSegmenterLogic::vtkSlicerGraphCutInteractiveSegmente
 {
 	this->gData = AppData::AppData();
 	this->seg = NULL;
+	this->ROI=NULL;
+	this->cropROI=NULL;
+	this->editorModuleNode=NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -179,8 +182,8 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::checkMarkups(vtkMRMLScalarVolume
     int markupNum=markups->GetNumberOfFiducials();
     vector<float> position;  //temp variance to store points' IJK 3 coordinates
 	vector<float> worldposition;  //temp variance to store points' World 3 coordinates
-    vector<vector<float>> points;  //vector to store sorted markup points in IJK coordinate
-	vector<vector<float>> worldpoints;   //vector to store sorted markup points in world coordinate
+    vector<vector <float> > points;  //vector to store sorted markup points in IJK coordinate
+	vector<vector <float> > worldpoints;   //vector to store sorted markup points in world coordinate
     if(markupNum!=4)
         return 0;
     else
@@ -269,7 +272,12 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::checkMarkups(vtkMRMLScalarVolume
 
 int vtkSlicerGraphCutInteractiveSegmenterLogic::crop(vtkMRMLScalarVolumeNode* input,vtkMRMLCropVolumeParametersNode* parametersNode)
 {
-    this->cropROI = vtkSmartPointer<vtkMRMLAnnotationROINode>::New();
+	if (this->cropROI != NULL)
+	{
+		this->cropROI->Delete();
+		this->cropROI = 0;
+	}
+	this->cropROI = vtkSmartPointer<vtkMRMLAnnotationROINode>::New();
 	double center[3];
 	this->ROI->GetXYZ(center);
 	cout<<"ROI center :"<<center[0]<<";"<<center[1]<<";"<<center[2]<<";"<<endl;
@@ -309,9 +317,9 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::crop(vtkMRMLScalarVolumeNode* in
 	
 }
 
-char* vtkSlicerGraphCutInteractiveSegmenterLogic::apply(vtkMRMLScalarVolumeNode* input,bool flag3D,bool flag2D,
+char* vtkSlicerGraphCutInteractiveSegmenterLogic::apply(vtkMRMLScalarVolumeNode* input,bool flag3D,bool flag2D)
 //										vtkMRMLScalarVolumeNode* output,
-										vtkMRMLScene* scene)
+//										vtkMRMLScene* scene)
 {
     //Set background box
     //Set pixels outside a box which is larger than the tightbox to be background
@@ -457,17 +465,9 @@ char* vtkSlicerGraphCutInteractiveSegmenterLogic::apply(vtkMRMLScalarVolumeNode*
         initSeg(flag3D,flag2D);
     else reseg(flag3D,flag2D);
 
- /*   if(1 == showResult(input,model,scene))
-	{
-		return 1;
-		cout<<"Finish Segmentation"<<endl;
-	}
-	else
-		return 0;*/
-
 	vtkSmartPointer<vtkMRMLLabelMapVolumeNode> labelVolume = vtkSmartPointer<vtkMRMLLabelMapVolumeNode>::New();
-	vtkSmartPointer<vtkMRMLLabelMapVolumeNode> outputLabelVolume = vtkSmartPointer<vtkMRMLLabelMapVolumeNode>::New();
-	cout<<"Created outputLabelVolume"<<endl;
+//	vtkSmartPointer<vtkMRMLLabelMapVolumeNode> outputLabelVolume = vtkSmartPointer<vtkMRMLLabelMapVolumeNode>::New();
+//	cout<<"Created outputLabelVolume"<<endl;
 	vtkSmartPointer<vtkImageData> labelMap = vtkSmartPointer<vtkImageData>::New();
 	labelMap=gData.getLabelMap();
 	cout<<"labelMap:"<<labelMap<<endl;
@@ -477,8 +477,7 @@ char* vtkSlicerGraphCutInteractiveSegmenterLogic::apply(vtkMRMLScalarVolumeNode*
 	labelVolume->SetAndObserveImageData(labelMap);	
 	labelVolume->UpdateScene(this->GetMRMLScene());
 	
-	return labelVolume->GetID();;
-
+	return labelVolume->GetID();
 }
 
 char*  vtkSlicerGraphCutInteractiveSegmenterLogic::reapply(vtkMRMLLabelMapVolumeNode* newlabels,bool flag3D,bool flag2D)
@@ -532,6 +531,7 @@ char*  vtkSlicerGraphCutInteractiveSegmenterLogic::reapply(vtkMRMLLabelMapVolume
 	this->GetMRMLScene()->GetNodesByName("timeLabel");
 
 	return labelVolume->GetID();
+
 }
 
 vector<MyBasic::Index3D> setSideStars(MyBasic::Index3D _s1,MyBasic::Index3D star_middle, MyBasic::Index3D _s2)
@@ -891,7 +891,7 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::setEditorParamNode()
 	{
 		for(int i=0;i<size;i++)
 		{
-			vtkMRMLScriptedModuleNode *moduleNode = vtkMRMLScriptedModuleNode::SafeDownCast(this->GetMRMLScene()->GetNthNodeByClass(i,"vtkMRMLScriptedModuleNode"));
+			vtkSmartPointer<vtkMRMLScriptedModuleNode> moduleNode = vtkMRMLScriptedModuleNode::SafeDownCast(this->GetMRMLScene()->GetNthNodeByClass(i,"vtkMRMLScriptedModuleNode"));
 			cout<<moduleNode->GetModuleName()<<endl;
 			if(strcmp(moduleNode->GetModuleName(),"Editor")==0)
 				//&&this->editorModuleNode==NULL)
@@ -899,6 +899,7 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::setEditorParamNode()
 				/*		vtkSetAndObserveMRMLNodeMacro(this->editorModuleNode,moduleNode);
 				this->editorModuleNode=moduleNode;
 				this->OnMRMLNodeModified(this->editorModuleNode);*/
+
 				vtkSmartPointer<vtkCallbackCommand> tmpcallback = vtkSmartPointer<vtkCallbackCommand>::New();
 				tmpcallback->SetCallback(recordTime);
 				this->callback=tmpcallback;
@@ -945,12 +946,12 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::calcTime()
 }
 
 
-void vtkSlicerGraphCutInteractiveSegmenterLogic::reset(vtkMRMLMarkupsFiducialNode* markups,vtkMRMLScene* scene,int flag)
+void vtkSlicerGraphCutInteractiveSegmenterLogic::reset(vtkMRMLMarkupsFiducialNode* markups,int flag)
 {
-	if(flag == 1)
-	{
-		scene->RemoveNode(markups);		
-		scene->RemoveNode(this->ROI);
-	}
-	this->seg=NULL;
+	//if(flag == 1)
+	//{
+	//	this->GetMRMLScene()->RemoveNode(markups);		
+	//	this->GetMRMLScene()->RemoveNode(this->ROI);
+	//}
+	//this->seg=NULL;
 }

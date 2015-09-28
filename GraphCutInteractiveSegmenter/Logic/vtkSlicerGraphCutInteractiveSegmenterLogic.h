@@ -66,11 +66,11 @@ public:
   //CHEN
   int checkMarkups(vtkMRMLScalarVolumeNode* input,vtkMRMLMarkupsFiducialNode* markups);
   int crop(vtkMRMLScalarVolumeNode* input,vtkMRMLCropVolumeParametersNode* parametersNode);
-  char* apply(vtkMRMLScalarVolumeNode* input,bool flag3D,bool flag2D,
+  char* apply(vtkMRMLScalarVolumeNode* input,bool flag3D,bool flag2D);
 //	  vtkMRMLScalarVolumeNode* output,
-	  vtkMRMLScene* scene);
+//	  vtkMRMLScene* scene);
 //  int showResult(vtkMRMLScalarVolumeNode* input,vtkMRMLModelNode* model,vtkMRMLScene* scene);
-  void reset(vtkMRMLMarkupsFiducialNode* markups,vtkMRMLScene* scene,int flag);
+  void reset(vtkMRMLMarkupsFiducialNode* markups,int flag);
   char*  reapply(vtkMRMLLabelMapVolumeNode* newlabels,bool flag3D,bool flag2D);
   
   void initSeg(bool flag3D,bool flag2D);
@@ -111,7 +111,7 @@ private:
   AdaptiveSegment3D* seg;
   AppData gData;
   vtkSlicerVolumesLogic* volumesLogic;
-  vtkSlicerAnnotationModuleLogic* annotationLogic;
+//  vtkSlicerAnnotationModuleLogic* annotationLogic;
   vtkSlicerCropVolumeLogic* cropVolumeLogic;
   vtkMRMLAnnotationROINode* ROI;
   vtkMRMLAnnotationROINode* cropROI;
