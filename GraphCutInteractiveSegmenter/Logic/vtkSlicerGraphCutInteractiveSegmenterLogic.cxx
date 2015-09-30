@@ -660,6 +660,7 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::reseg(bool flag3D,bool flag2D)
 //	gData.label.print();
 }
 
+/*show result in 3D*/
 //int vtkSlicerGraphCutInteractiveSegmenterLogic::showResult(vtkMRMLScalarVolumeNode* input,vtkMRMLModelNode* model,vtkMRMLScene* scene)
 //{
 //	cout<<"Showing result..."<<endl;
@@ -839,12 +840,14 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::reseg(bool flag3D,bool flag2D)
 //---------------------------------------------------------------------------
 void vtkSlicerGraphCutInteractiveSegmenterLogic::SetMRMLSceneInternal(vtkMRMLScene * newScene)
 {
-  vtkNew<vtkIntArray> events;
+//  vtkNew<vtkIntArray> events;
+	vtkIntArray *events = vtkIntArray::New();
   events->InsertNextValue(vtkMRMLScene::NodeAddedEvent);
   events->InsertNextValue(vtkMRMLScene::NodeRemovedEvent);
   events->InsertNextValue(vtkMRMLScene::EndCloseEvent);
-  this->SetAndObserveMRMLSceneEventsInternal(newScene, events.GetPointer());
+  this->SetAndObserveMRMLSceneEventsInternal(newScene, events);
   cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
+  events->Delete();
 }
 
 //-----------------------------------------------------------------------------
@@ -892,20 +895,23 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::setEditorParamNode()
 		for(int i=0;i<size;i++)
 		{
 			vtkSmartPointer<vtkMRMLScriptedModuleNode> moduleNode = vtkMRMLScriptedModuleNode::SafeDownCast(this->GetMRMLScene()->GetNthNodeByClass(i,"vtkMRMLScriptedModuleNode"));
-			cout<<moduleNode->GetModuleName()<<endl;
-			if(strcmp(moduleNode->GetModuleName(),"Editor")==0)
-				//&&this->editorModuleNode==NULL)
+			//cout<<moduleNode->GetModuleName()<<endl;
+			if(moduleNode->GetModuleName())
 			{
-				/*		vtkSetAndObserveMRMLNodeMacro(this->editorModuleNode,moduleNode);
-				this->editorModuleNode=moduleNode;
-				this->OnMRMLNodeModified(this->editorModuleNode);*/
+				if(strcmp(moduleNode->GetModuleName(),"Editor")==0)
+					//&&this->editorModuleNode==NULL)
+				{
+					/*		vtkSetAndObserveMRMLNodeMacro(this->editorModuleNode,moduleNode);
+					this->editorModuleNode=moduleNode;
+					this->OnMRMLNodeModified(this->editorModuleNode);*/
 
-				vtkSmartPointer<vtkCallbackCommand> tmpcallback = vtkSmartPointer<vtkCallbackCommand>::New();
-				tmpcallback->SetCallback(recordTime);
-				this->callback=tmpcallback;
-				this->editorModuleNode=moduleNode;
-				this->editorModuleNode->AddObserver(vtkCommand::ModifiedEvent,callback);
-				cout<<"Got Editor Module................"<<moduleNode->GetModuleName()<<endl;
+					vtkSmartPointer<vtkCallbackCommand> tmpcallback = vtkSmartPointer<vtkCallbackCommand>::New();
+					tmpcallback->SetCallback(recordTime);
+					this->callback=tmpcallback;
+					this->editorModuleNode=moduleNode;
+					this->editorModuleNode->AddObserver(vtkCommand::ModifiedEvent,callback);
+					cout<<"Got Editor Module................"<<moduleNode->GetModuleName()<<endl;
+				}
 			}
 		}
 	}
@@ -916,7 +922,8 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::setEditorParamNode()
 void recordTime(vtkObject* caller, long unsigned int eventId, void* clientData, void* callData)
 {
 	cout<<"recordTime!!!!!!!!!"<<endl;
-	vtkMRMLScriptedModuleNode *moduleNode = static_cast<vtkMRMLScriptedModuleNode*>(caller);
+	//vtkMRMLScriptedModuleNode *moduleNode = static_cast<vtkMRMLScriptedModuleNode*>(caller);
+	vtkSmartPointer<vtkMRMLScriptedModuleNode> moduleNode = static_cast<vtkMRMLScriptedModuleNode*>(caller);
 	cout<<moduleNode->GetParameter("effect")<<endl;
 	if(moduleNode->GetParameter("effect").compare("PaintEffect")==0)
 	{
@@ -948,10 +955,10 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::calcTime()
 
 void vtkSlicerGraphCutInteractiveSegmenterLogic::reset(vtkMRMLMarkupsFiducialNode* markups,int flag)
 {
-	//if(flag == 1)
-	//{
-	//	this->GetMRMLScene()->RemoveNode(markups);		
-	//	this->GetMRMLScene()->RemoveNode(this->ROI);
-	//}
-	//this->seg=NULL;
+	if(flag == 1)
+	{
+		this->GetMRMLScene()->RemoveNode(markups);		
+		this->GetMRMLScene()->RemoveNode(this->ROI);
+	}
+	this->seg=NULL;
 }
