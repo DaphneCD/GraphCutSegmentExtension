@@ -528,8 +528,6 @@ char*  vtkSlicerGraphCutInteractiveSegmenterLogic::reapply(vtkMRMLLabelMapVolume
 	labelVolume->SetAndObserveImageData(gData.getLabelMap());	
 	labelVolume->UpdateScene(this->GetMRMLScene());
 
-	this->GetMRMLScene()->GetNodesByName("timeLabel");
-
 	return labelVolume->GetID();
 
 }

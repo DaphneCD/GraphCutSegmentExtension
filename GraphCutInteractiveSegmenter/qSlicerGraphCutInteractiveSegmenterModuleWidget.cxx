@@ -333,7 +333,8 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onReapplyPushButtonClicke
 
 	int time=logic->calcTime();
 	char time_str[30];
-	itoa(time,time_str,10);
+//	itoa(time,time_str,10);
+	sprintf(time_str,"%d",time);
 	d->timeLabel->setText(time_str);
 
 	char* labelNodeID = logic->reapply(vtkMRMLLabelMapVolumeNode::SafeDownCast(d->outputVolumeMRMLNodeComboBox->currentNode()), 
