@@ -193,11 +193,11 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::checkMarkups(vtkMRMLScalarVolume
         {
 			double pos[4];
 			markups->GetNthFiducialWorldCoordinates(i,pos);
-//			cout<<"WorldPOS:"<<pos[0]<<";"<<pos[1]<<";"<<pos[2]<<";"<<pos[3]<<endl;
+			cout<<"WorldPOS:"<<pos[0]<<";"<<pos[1]<<";"<<pos[2]<<";"<<pos[3]<<endl;
 			float temp[4];
 			std::copy(pos, pos + 4, temp);
 			float* ijkpos = RASToIJKMatrix->MultiplyPoint(temp);
-//			cout<<"IJKPOS:"<<ijkpos[0]<<";"<<ijkpos[1]<<";"<<ijkpos[2]<<";"<<ijkpos[3]<<endl;
+			cout<<"IJKPOS:"<<ijkpos[0]<<";"<<ijkpos[1]<<";"<<ijkpos[2]<<";"<<ijkpos[3]<<endl;
 			
 			for(int j=0;j<3;j++)
 			{
@@ -237,10 +237,10 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::checkMarkups(vtkMRMLScalarVolume
 		vector<float> box1=points.at(1);
 		vector<float> box2=points.at(2);
 
-/*		cout<<"POINTS[0]:"<<star_first[0]<<";"<<star_first[1]<<";"<<star_first[2]<<endl;
+		cout<<"POINTS[0]:"<<star_first[0]<<";"<<star_first[1]<<";"<<star_first[2]<<endl;
 		cout<<"POINTS[1]:"<<box1[0]<<";"<<box1[1]<<";"<<box1[2]<<endl;
 		cout<<"POINTS[2]:"<<box2[0]<<";"<<box2[1]<<";"<<box2[2]<<endl;
-		cout<<"POINTS[3]:"<<star_last[0]<<";"<<star_last[1]<<";"<<star_last[2]<<endl;*/
+		cout<<"POINTS[3]:"<<star_last[0]<<";"<<star_last[1]<<";"<<star_last[2]<<endl;
 		
 		if(worldpoints.at(1).at(2)!=worldpoints.at(2).at(2))  //the two points of bounding box are not sure to be on the same slice,
 			return -2;                                        //due to the coorinate transformation (so it is checked before transformation)
@@ -274,8 +274,8 @@ int vtkSlicerGraphCutInteractiveSegmenterLogic::crop(vtkMRMLScalarVolumeNode* in
 {
 	if (this->cropROI != NULL)
 	{
-		this->cropROI->Delete();
-		this->cropROI = 0;
+//		this->cropROI->Delete();
+		this->cropROI = NULL;
 	}
 	this->cropROI = vtkSmartPointer<vtkMRMLAnnotationROINode>::New();
 	double center[3];
@@ -460,7 +460,7 @@ char* vtkSlicerGraphCutInteractiveSegmenterLogic::apply(vtkMRMLScalarVolumeNode*
 //    gData.seeds.set(gData.tightBox,UNKNOWN);
 	gData.seeds.set(gData.shifttightBox,UNKNOWN);
 
-	cout<<"this->seg:"<<this->seg<<endl;
+//	cout<<"this->seg:"<<this->seg<<endl;
     if(this->seg==NULL)
         initSeg(flag3D,flag2D);
     else reseg(flag3D,flag2D);
@@ -959,4 +959,5 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::reset(vtkMRMLMarkupsFiducialNod
 		this->GetMRMLScene()->RemoveNode(this->ROI);
 	}
 	this->seg=NULL;
+	this->gData = AppData::AppData();
 }
