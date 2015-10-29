@@ -289,7 +289,8 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onCropPushButtonClicked()
 void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onApplyPushButtonClicked()
 {
     Q_D(qSlicerGraphCutInteractiveSegmenterModuleWidget);
-    vtkSmartPointer<vtkSlicerGraphCutInteractiveSegmenterLogic> logic = d->logic();
+//    vtkSmartPointer<vtkSlicerGraphCutInteractiveSegmenterLogic> logic = d->logic();
+	vtkSlicerGraphCutInteractiveSegmenterLogic *logic = d->logic();
 
 	char* labelNodeID;
 	if(this->isCropped)
@@ -379,6 +380,7 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onEndCloseEvent()
 	d->star3CheckBox->setEnabled(true);
 	d->inputVolumeMRMLNodeComboBox->setEnabled(true);
 	d->markupsMRMLNodeComboBox->setEnabled(true);
+	this->isCropped=false;
 	cout<<"close scene!"<<endl;
 }
 

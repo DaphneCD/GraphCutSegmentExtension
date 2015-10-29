@@ -399,13 +399,14 @@ char* vtkSlicerGraphCutInteractiveSegmenterLogic::apply(vtkMRMLScalarVolumeNode*
 	IJKend[1]=IJK[1];
 	IJKend[2]=IJK[2];
 
-	//set gData's shiftedtightBox
-	gData.shifttightBox.start.col=min((int)IJKstart[0],(int)IJKend[0]);
-	gData.shifttightBox.start.row=min((int)IJKstart[1],(int)IJKend[1]);
-	gData.shifttightBox.start.sli=min((int)IJKstart[2],(int)IJKend[2]);
-	gData.shifttightBox.end.col=max((int)IJKstart[0],(int)IJKend[0]);
-	gData.shifttightBox.end.row=max((int)IJKstart[1],(int)IJKend[1]);
-	gData.shifttightBox.end.sli=max((int)IJKstart[2],(int)IJKend[2]);
+	//set gData's shiftedtightBox 
+	//shiftedtightBox should be within imgBox
+	gData.shifttightBox.start.col=max(imgBox.start.col,min((int)IJKstart[0],(int)IJKend[0]));
+	gData.shifttightBox.start.row=max(imgBox.start.row,min((int)IJKstart[1],(int)IJKend[1]));
+	gData.shifttightBox.start.sli=max(imgBox.start.sli,min((int)IJKstart[2],(int)IJKend[2]));
+	gData.shifttightBox.end.col=min(imgBox.end.col,max((int)IJKstart[0],(int)IJKend[0]));
+	gData.shifttightBox.end.row=min(imgBox.end.row,max((int)IJKstart[1],(int)IJKend[1]));
+	gData.shifttightBox.end.sli=min(imgBox.end.sli,max((int)IJKstart[2],(int)IJKend[2]));
 	cout<<"IJKend :"<<IJKend[0]<<";"<<IJKend[1]<<";"<<IJKend[2]<<endl;
 	cout<<"gData.shifttightBox :"<<gData.shifttightBox.start.col<<";"<<gData.shifttightBox.start.row<<";"<<gData.shifttightBox.start.sli<<endl;
 	cout<<"gData.shifttightBox :"<<gData.shifttightBox.end.col<<";"<<gData.shifttightBox.end.row<<";"<<gData.shifttightBox.end.sli<<endl;
@@ -589,8 +590,8 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::initSeg(bool flag3D,bool flag2D
 	cout<<"gData.mask.set"<<endl;
 
    // MyBasic::Range3D seg_region(0,16,10,46,9,43);
-//	this->seg = new AdaptiveSegment3D(gData.image,gData.mask,int((gData.tightBox.start.sli+gData.tightBox.end.sli)/2));//,seg_region);
-	this->seg = new AdaptiveSegment3D(gData.image,gData.mask,gData.shifttightBox.start.sli);//,seg_region);
+	this->seg = new AdaptiveSegment3D(gData.image,gData.mask,int((gData.shifttightBox.start.sli+gData.shifttightBox.end.sli)/2));//,seg_region);
+//	this->seg = new AdaptiveSegment3D(gData.image,gData.mask,gData.shifttightBox.start.sli);//,seg_region);
     MyBasic::Index3D star_middle, star_first, star_last;
     star_middle = (gData.shifttightBox.start + gData.shifttightBox.end)/2;
 	star_first= gData.shiftstar_first;
