@@ -961,4 +961,5 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::reset(vtkMRMLMarkupsFiducialNod
 	}
 	this->seg=NULL;
 	this->gData = AppData::AppData();
+	this->totalTime=0;
 }
