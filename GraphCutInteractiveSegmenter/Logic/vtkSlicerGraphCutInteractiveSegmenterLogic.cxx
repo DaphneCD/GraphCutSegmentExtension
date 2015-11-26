@@ -538,11 +538,13 @@ vector<MyBasic::Index3D> setSideStars(MyBasic::Index3D _s1,MyBasic::Index3D star
    //initialize seeds
    vector<MyBasic::Index3D> stars(_s2.sli-_s1.sli+1);
 
+//   stars.at(star_middle.sli) = star_middle;
    stars[star_middle.sli] = star_middle;
 
    MyBasic::Index3D star_first = _s1;
    MyBasic::Index3D star_last = _s2;
 
+   cout<<stars.size()<<endl;
    stars.front() = star_first;
    stars.back() = star_last;
 
