@@ -19,6 +19,7 @@ include(${Slicer_USE_FILE})
 #-----------------------------------------------------------------------------
 # Extension modules
 add_subdirectory(GraphCutInteractiveSegmenter)
+add_subdirectory(GraphCutSegmentSelfTest)
 ## NEXT_MODULE
 
 #-----------------------------------------------------------------------------
