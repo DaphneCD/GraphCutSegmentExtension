@@ -617,7 +617,7 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::initSeg(bool flag3D,bool flag2D
     Data3D<LABEL>& seeds = gData.seeds;
 
     this->seg->setSeeds(seeds);
-    gData.seeds.save("label");
+ //   gData.seeds.save("label");
 
     Config cfg;
     cfg.starshape2 = flag2D;
