@@ -324,6 +324,8 @@ void qSlicerGraphCutInteractiveSegmenterModuleWidget:: onApplyPushButtonClicked(
 		d->outputVolumeMRMLNodeComboBox->setCurrentNodeID(labelNodeID);
 		d->outputVolumeMRMLNodeComboBox->setEnabled(true);
 		d->applyPushButton->setEnabled(false);
+
+
 	}
 	else
 		return;

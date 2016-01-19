@@ -477,6 +477,13 @@ char* vtkSlicerGraphCutInteractiveSegmenterLogic::apply(vtkMRMLScalarVolumeNode*
 	labelVolume=this->GetVolumesLogic()->CreateAndAddLabelVolume(input,newLabel.c_str());
 	labelVolume->SetAndObserveImageData(labelMap);	
 	labelVolume->UpdateScene(this->GetMRMLScene());
+
+	vtkSmartPointer<vtkMRMLApplicationLogic> applogic=vtkSmartPointer<vtkMRMLApplicationLogic>::New();
+	vtkSmartPointer<vtkMRMLSelectionNode> selnode=vtkSmartPointer<vtkMRMLSelectionNode>::New();
+	applogic=this->GetApplicationLogic();
+	selnode=applogic->GetSelectionNode();
+	selnode->SetActiveLabelVolumeID(labelVolume->GetID());
+	applogic->PropagateLabelVolumeSelection(0);
 	
 	return labelVolume->GetID();
 }
@@ -491,6 +498,9 @@ char*  vtkSlicerGraphCutInteractiveSegmenterLogic::reapply(vtkMRMLLabelMapVolume
 	dims[2]=gData.image.getNumSli();
 	dims[1]=gData.image.getNumRow();
 	dims[0]=gData.image.getNumCol();
+
+	int changedNum=0;
+
 	for(int s=0;s<dims[2];s++)
 	{
 		for(int j=0;j<dims[1];j++)
@@ -505,10 +515,13 @@ char*  vtkSlicerGraphCutInteractiveSegmenterLogic::reapply(vtkMRMLLabelMapVolume
 					    gData.seeds.at(s,j,i)=FOREGROUND;
 					if(newlabel[0]==0)
 					    gData.seeds.at(s,j,i)=BACKGROUND;
+					changedNum++;
 				}
 			}
 		}
 	}
+	if(changedNum==0)
+		return NULL;
 
 	reseg(flag3D,flag2D);
 
@@ -528,6 +541,13 @@ char*  vtkSlicerGraphCutInteractiveSegmenterLogic::reapply(vtkMRMLLabelMapVolume
 	labelVolume=this->GetVolumesLogic()->CreateAndAddLabelVolume(newlabels,newlabels->GetName());
 	labelVolume->SetAndObserveImageData(gData.getLabelMap());	
 	labelVolume->UpdateScene(this->GetMRMLScene());
+
+	vtkSmartPointer<vtkMRMLApplicationLogic> applogic=vtkSmartPointer<vtkMRMLApplicationLogic>::New();
+	vtkSmartPointer<vtkMRMLSelectionNode> selnode=vtkSmartPointer<vtkMRMLSelectionNode>::New();
+	applogic=this->GetApplicationLogic();
+	selnode=applogic->GetSelectionNode();
+	selnode->SetActiveLabelVolumeID(labelVolume->GetID());
+	applogic->PropagateLabelVolumeSelection(0);
 
 	return labelVolume->GetID();
 
