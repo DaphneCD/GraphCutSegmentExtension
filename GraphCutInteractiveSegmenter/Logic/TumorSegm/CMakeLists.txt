@@ -5,6 +5,8 @@ project(TumorSegm)
 find_package(VTK)
 include(${VTK_USE_FILE})
 
+set(CMAKE_POSITION_INDEPENDENT_CODE 1)
+
 set(tumor_segm_SRCS
   AdaptiveSegment2D.cpp
   AdaptiveSegment2D.h
