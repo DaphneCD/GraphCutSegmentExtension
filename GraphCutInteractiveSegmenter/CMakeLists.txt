@@ -1,8 +1,7 @@
-#cmake_minimum_required(VERSION 2.8.9)
-
-#find_package(Slicer COMPONENTS ConfigurePrerequisites)
+cmake_minimum_required(VERSION 3.5)
 
 project(GraphCutInteractiveSegmenter)
+
 #-----------------------------------------------------------------------------
 set(MODULE_NAME GraphCutInteractiveSegmenter)
 set(MODULE_TITLE ${MODULE_NAME})
@@ -18,7 +17,6 @@ endif()
 #-----------------------------------------------------------------------------
 add_subdirectory(Logic)
 add_subdirectory(Widgets)
-#add_subdirectory(MRMLDM)
 
 #-----------------------------------------------------------------------------
 set(MODULE_EXPORT_DIRECTIVE "Q_SLICER_QTMODULES_${MODULE_NAME_UPPER}_EXPORT")
@@ -65,24 +63,6 @@ set(MODULE_TARGET_LIBRARIES
 set(MODULE_RESOURCES
   Resources/qSlicer${MODULE_NAME}Module.qrc
   )
-
-#----------------------------------------------------------------------------
-#include(${VTK_CMAKE_DIR}/vtkMakeInstantiator.cmake)
-#set(displayable_manager_SRCS
-#  vtkMRMLGraphCutInteractiveSegmenterDisplayableManager.cxx
-# )
-#set(VTK_USE_INSTANTIATOR_NEW 1)
-#VTK_MAKE_INSTANTIATOR3("${MODULE_NAME}Instantiator"
-#  displayable_manager_instantiator_SRCS
-#  "${displayable_manager_SRCS}"
-#  "${${KIT}_EXPORT_DIRECTIVE}"
-#  ${CMAKE_CURRENT_BINARY_DIR}
-#  "${KIT}Export.h"
-#  )
-#set(${KIT}_SRCS
-#  ${displayable_manager_instantiator_SRCS}
-#  ${displayable_manager_SRCS}
-#  )
 
 #-----------------------------------------------------------------------------
 slicerMacroBuildQtModule(

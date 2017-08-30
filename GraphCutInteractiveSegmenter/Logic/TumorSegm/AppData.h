@@ -24,6 +24,7 @@ class AppData
 {
 public:
     AppData();
+
     void loadImage(vtkImageData* image,MyBasic::Range3D imgBox);
 	vtkSmartPointer<vtkImageData> getLabelMap();
 
@@ -33,12 +34,12 @@ public:
     //mask with user seeds
     Data3D<LABEL> mask;
     MyBasic::Range3D tightBox;
-	MyBasic::Range3D shifttightBox;
+    MyBasic::Range3D shifttightBox;
     MyBasic::Index3D imgStart;
-	MyBasic::Index3D wholeRange;
-	MyBasic::Index3D star_first;
+    MyBasic::Index3D wholeRange;
+    MyBasic::Index3D star_first;
     MyBasic::Index3D star_last;
-	MyBasic::Index3D shiftstar_first;
+    MyBasic::Index3D shiftstar_first;
     MyBasic::Index3D shiftstar_last;
     Config cfg;
 

@@ -100,7 +100,8 @@ bool isPainter;
 //----------------------------------------------------------------------------
 vtkSlicerGraphCutInteractiveSegmenterLogic::vtkSlicerGraphCutInteractiveSegmenterLogic()
 {
-	this->gData = AppData::AppData();
+	AppData data;
+	this->gData = data;
 	this->seg = NULL;
 	this->ROI=NULL;
 	this->cropROI=NULL;
@@ -982,6 +983,7 @@ void vtkSlicerGraphCutInteractiveSegmenterLogic::reset(vtkMRMLMarkupsFiducialNod
 		this->GetMRMLScene()->RemoveNode(this->ROI);
 	}
 	this->seg=NULL;
-	this->gData = AppData::AppData();
+	AppData data;
+	this->gData = data;
 	this->totalTime=0;
 }
