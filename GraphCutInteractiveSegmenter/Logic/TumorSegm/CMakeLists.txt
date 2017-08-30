@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
 project(TumorSegm)
-set(tumor_segm_name "${PROJECT_NAME}")
 
-FIND_PACKAGE(VTK)
-INCLUDE(${VTK_USE_FILE})
-INCLUDE("${VTK_DIR}/Common/DataModel/CMakeFiles/vtkCommonDataModel.cmake")
+find_package(VTK)
+include(${VTK_USE_FILE})
 
 set(tumor_segm_SRCS
   AdaptiveSegment2D.cpp
@@ -45,8 +43,5 @@ set(tumor_segm_SRCS
   )
 
 add_library(TumorSegm STATIC ${tumor_segm_SRCS})
-
-
-TARGET_LINK_LIBRARIES(vtkCommonDataModel)
-
+target_link_libraries(TumorSegm PUBLIC ${VTK_LIBRARIES})
 
