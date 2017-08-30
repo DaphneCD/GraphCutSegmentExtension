@@ -1,6 +1,6 @@
+cmake_minimum_required(VERSION 3.5)
 
 project(GraphCutSegment)
-cmake_minimum_required(VERSION 2.8.9)
 
 #-----------------------------------------------------------------------------
 # Extension meta-information
